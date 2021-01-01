@@ -72,3 +72,7 @@ if __name__ in '__main__':
     w = XNote()
     w.show()
     sys.exit(app.exec_())
+
+
+
+print('hello world')
