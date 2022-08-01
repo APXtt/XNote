@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>XNote</class>
+ <widget class="QMainWindow" name="XNote">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>501</width>
+      <height>551</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QTextEdit" name="textEdit"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>500</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuA">
+    <property name="title">
+     <string>A</string>
+    </property>
+    <addaction name="actionZ"/>
+    <addaction name="actionX"/>
+    <addaction name="actionC"/>
+   </widget>
+   <widget class="QMenu" name="menuS">
+    <property name="title">
+     <string>S</string>
+    </property>
+    <addaction name="actionZ_2"/>
+    <addaction name="actionX_2"/>
+    <addaction name="actionC_2"/>
+   </widget>
+   <widget class="QMenu" name="menuD">
+    <property name="title">
+     <string>D</string>
+    </property>
+    <addaction name="actionZ_3"/>
+    <addaction name="actionX_3"/>
+    <addaction name="actionC_3"/>
+   </widget>
+   <addaction name="menuA"/>
+   <addaction name="menuS"/>
+   <addaction name="menuD"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionZ">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Z</string>
+   </property>
+  </action>
+  <action name="actionX">
+   <property name="text">
+    <string>X</string>
+   </property>
+  </action>
+  <action name="actionC">
+   <property name="text">
+    <string>C</string>
+   </property>
+  </action>
+  <action name="actionZ_2">
+   <property name="text">
+    <string>Z</string>
+   </property>
+  </action>
+  <action name="actionX_2">
+   <property name="text">
+    <string>X</string>
+   </property>
+  </action>
+  <action name="actionC_2">
+   <property name="text">
+    <string>C</string>
+   </property>
+  </action>
+  <action name="actionZ_3">
+   <property name="text">
+    <string>Z</string>
+   </property>
+  </action>
+  <action name="actionX_3">
+   <property name="text">
+    <string>X</string>
+   </property>
+  </action>
+  <action name="actionC_3">
+   <property name="text">
+    <string>C</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
