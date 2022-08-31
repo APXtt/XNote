@@ -1,4 +1,3 @@
-from ntpath import join
 import sys
 import os
 from PyQt5.QtWidgets import *
@@ -17,6 +16,9 @@ auto_save = 1 # 1 == auto save True / -1 == auto Save False
 auto_save_cycle = 60 # 60s
 auto_save_one_run = 1
 auto_save_run = False
+main_style = """
+border: 1px solid rgb(102, 102, 102);
+"""
 
 
 class sound_error(QThread):
@@ -59,6 +61,9 @@ class Window(QMainWindow, ui_file):
         self.sound_error = sound_error()
         self.sound_sucess = sound_sucess()
         self.auto_save_signal = auto_save_signal()
+
+        self.lineEdit.setStyleSheet(main_style)
+        self.textEdit.setStyleSheet(main_style)
 
         ### B ###
         self.lineEdit.returnPressed.connect(self.lineEdit_Enter)
