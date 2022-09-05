@@ -1,23 +1,10 @@
-### 임시 노트 시작 ###
-"""
-select border color change
-
-keyPressEvent Ctrl+S, Ctrl+O
-
-clear
-
-Mouse Dreg in/out - Moitor Size Change
-"""
-### 임시 노트 끝 ###
-
 import sys
 import os
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtCore import QThread, Qt, QPointF
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QColor
 import winsound
-import re
 
 ### 기본지정 변수들 ###
 ui_file = uic.loadUiType("ui/20220812_01.ui")[0]
@@ -28,7 +15,7 @@ auto_save = 1 # 1 == auto save True / -1 == auto Save False
 auto_save_cycle = 60 # 60s
 auto_save_one_run = 1
 auto_save_run = False
-n = 11 # 기본 textEdit Fontsize
+n = 100 # 기본 textEdit 화면 사이즈 100%
 
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
@@ -85,31 +72,34 @@ class Window(QMainWindow, ui_file):
         self.textEdit.textChanged.connect(self.textEdit_Change)
 
     ### C ###
-    # def keyPressEvent(self, e):
-    #     self.bCtrl = True
-    #     self.update()
+    def keyPressEvent(self, e):
+        self.bCtrl = True
+        self.update()
 
-    #     if e.key() == Qt.Key_S:
-    #         self.savefile()
-    #     elif e.key() == Qt.Key_O:
-    #         self.openfile()
-    # def keyReleaseEvent(self, e):
-    #     if e.key() == Qt.Key_Control:
-    #         self.bCtrl = False
-    #     self.update()
-    # def wheelEvent(self, e):
-    #     global n
+        if e.key() == Qt.Key_S:
+            self.savefile()
+        elif e.key() == Qt.Key_O:
+            self.openfile()
+    def keyReleaseEvent(self, e):
+        if e.key() == Qt.Key_Control:
+            self.bCtrl = False
+        self.update()
+    def wheelEvent(self, e):
+        global n
 
-    #     if self.bCtrl and 30 > n:
-    #         self.zoom += e.angleDelta() / 120
-    #         n = 11 + int(self.zoom.y())
-    #         print(n)
-    #         self.textEdit.setFontPointSize(n)
-    #     else:
-    #         self.deg += e.angleDelta() / 8
-    #         self.textEdit.setFontPointSize(self.deg.y())
-    #         print(self.deg.y())
-    #     self.update()
+        if self.bCtrl:
+            if e.angleDelta().y() > 0 and n < 300:
+                self.textEdit.zoomIn(2)
+                n += 10
+                self.statusBar().showMessage('{0}%'.format(n), 400)
+                print('up')
+            elif e.angleDelta().y() < 0 and n > 70:
+                print('down')
+                self.textEdit.zoomIn(-2)
+                n -= 10
+                self.statusBar().showMessage('{0}%'.format(n), 400)
+        self.update()
+
 
     def lineEdit_Enter(self):
         if self.lineEdit.text() == 'cmd':
@@ -147,7 +137,8 @@ class Window(QMainWindow, ui_file):
             find_value = self.lineEdit.text()[5:]
             self.sound_sucess.start()
             self.lineEdit.clear()
-            self.find(find_value)
+            find_list = self.find(find_value)
+            self.find_textEdit_change(find_list)
         else:
             self.sound_error.start()
             self.lineEdit.clear()
@@ -236,9 +227,28 @@ class Window(QMainWindow, ui_file):
 
     def find(self, v):
         t = self.textEdit.toPlainText()
-        find_st = t.find(v)
-        print(find_st)
-        print(find_st+(len(v)-1))
+        find_end = 0
+        find_count = 0
+        find_return = []
+
+        if v != '':
+            while True:
+                try:
+                    find_st = t.index(v, find_end)
+                    find_end = find_st+(len(v)-1)
+                    find_count += 1
+                    find_return.append([find_count, find_st, find_end])
+                except:
+                    break
+        return find_return
+
+    def find_textEdit_change(self, find_list):
+        if find_list != []:
+            print(find_list)
+
+
+
+        
         
 
 

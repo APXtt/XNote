@@ -1,20 +1,21 @@
-# import tkinter
-from tkinter import *
+def addLineTable(self):
 
-# Create Tk object
-window = Tk()
+    row = self.model.rowCount()   #create a line into my tableview
+    self.model.insertRows(row)
+    column = 0
+    index = self.model.index(row, column)        
+    tableView = self.TABLE            
+    tableView.setFocus()
+    tableView.setCurrentIndex(index)
+    cursor = self.editor.textCursor()
 
-# Set the window title
-window.title('GFG')
+    # get the current format
+    format = cursor.charFormat()
+    # modify it
+    format.setBackground(QtCore.Qt.red)
+    format.setForeground(QtCore.Qt.blue)
+    # apply it
+    cursor.setCharFormat(format)
 
-# Entry Widget
-# highlightthickness for thickness of the border
-entry = Entry(highlightthickness=2)
-
-# highlightbackground and highlightcolor for the border color
-entry.config(highlightbackground = "red", highlightcolor= "red")
-
-# Place the widgets in window
-entry.pack(padx=20, pady=20)
-
-window.mainloop()
+    textSelected = cursor.selectedText()  #set text to cursor
+    self.model.setData(index, QVariant(textSelected)) #set text to new tableview line
