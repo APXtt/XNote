@@ -84,38 +84,32 @@ class Window(QMainWindow, ui_file):
         self.lineEdit.returnPressed.connect(self.lineEdit_Enter)
         self.textEdit.textChanged.connect(self.textEdit_Change)
 
-    ## C ###
+    ### C ###
+    # def keyPressEvent(self, e):
+    #     self.bCtrl = True
+    #     self.update()
 
+    #     if e.key() == Qt.Key_S:
+    #         self.savefile()
+    #     elif e.key() == Qt.Key_O:
+    #         self.openfile()
+    # def keyReleaseEvent(self, e):
+    #     if e.key() == Qt.Key_Control:
+    #         self.bCtrl = False
+    #     self.update()
+    # def wheelEvent(self, e):
+    #     global n
 
-""" 이거 수정해야 함
-    def keyPressEvent(self, e):
-        self.bCtrl = True
-        self.update()
-
-        if e.key() == Qt.Key_S:
-            self.savefile()
-        elif e.key() == Qt.Key_O:
-            self.openfile()
-    def keyReleaseEvent(self, e):
-        if e.key() == Qt.Key_Control:
-            self.bCtrl = False
-        self.update()
-    def wheelEvent(self, e):
-        global n
-
-        if self.bCtrl and 30 > n:
-            self.zoom += e.angleDelta() / 120
-            n = 11 + int(self.zoom.y())
-            print(n)
-            self.textEdit.setFontPointSize(n)
-        else:
-            self.deg += e.angleDelta() / 8
-            self.textEdit.setFontPointSize(self.deg.y())
-            print(self.deg.y())
-        self.update()
-"""
-            
-
+    #     if self.bCtrl and 30 > n:
+    #         self.zoom += e.angleDelta() / 120
+    #         n = 11 + int(self.zoom.y())
+    #         print(n)
+    #         self.textEdit.setFontPointSize(n)
+    #     else:
+    #         self.deg += e.angleDelta() / 8
+    #         self.textEdit.setFontPointSize(self.deg.y())
+    #         print(self.deg.y())
+    #     self.update()
 
     def lineEdit_Enter(self):
         if self.lineEdit.text() == 'cmd':
@@ -149,11 +143,11 @@ class Window(QMainWindow, ui_file):
             self.textEdit.clear()
             self.sound_sucess.start()
             self.lineEdit.clear()
-        # elif self.lineEdit.text()[:4] == 'find':
-        #     find_value = self.lineEdit.text()[5:]
-        #     self.sound_sucess.start()
-        #     self.lineEdit.clear()
-        #     self.find(find_value)
+        elif self.lineEdit.text()[:4] == 'find':
+            find_value = self.lineEdit.text()[5:]
+            self.sound_sucess.start()
+            self.lineEdit.clear()
+            self.find(find_value)
         else:
             self.sound_error.start()
             self.lineEdit.clear()
@@ -240,28 +234,12 @@ class Window(QMainWindow, ui_file):
             self.auto_save_signal.resume()
             self.statusbar.showMessage('Auto save = True', 1000)
 
-    # def find(self, v):
-    #     v_div = []
-    #     for i in range(len(v)):
-    #         v_div.append(v[i])
-    #     t = self.textEdit.toPlainText()
-    #     sucess_count = 1
+    def find(self, v):
+        t = self.textEdit.toPlainText()
+        find_st = t.find(v)
+        print(find_st)
+        print(find_st+(len(v)-1))
         
-    #     for i in range(len(t)):
-    #         if v_div[0] == t[i]:
-    #             for ii in range(len(v_div)-1):
-
-
-
-    #                 if i == 0:
-    #                     i = 1
-    #                 if v_div[ii+1] == t[ii+i]:
-    #                     sucess_count += 1
-    #                 print(i, ii, sucess_count)
-        
-    #     find_count = sucess_count / len(v_div)
-    #     print(sucess_count)
-    #     print(find_count)
 
 
 
