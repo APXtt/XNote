@@ -2,8 +2,8 @@ import sys
 import os
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-from PyQt5.QtCore import QThread, Qt, QPointF
-from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtCore import QThread, Qt
+from PyQt5.QtGui import QIcon, QTextCursor
 import winsound
 
 ### 기본지정 변수들 ###
@@ -16,6 +16,7 @@ auto_save_cycle = 60 # 60s
 auto_save_one_run = 1
 auto_save_run = False
 n = 100 # 기본 textEdit 화면 사이즈 100%
+find_count = 0
 
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
@@ -41,14 +42,10 @@ class auto_save_signal(QThread):
                     f.write(text)
                     Window.setWindowTitle(file_run_path)
                 self.sleep(auto_save_cycle)
-    def resume(self):
+    def resume(self): # 재가동
         self.running = True
-    def pause(self):
+    def pause(self): # 멈춤
         self.running = False
-
-                
-
-
 
 class Window(QMainWindow, ui_file):
     def __init__(self):
@@ -60,18 +57,22 @@ class Window(QMainWindow, ui_file):
         self.sound_sucess = sound_sucess()
         self.auto_save_signal = auto_save_signal()
 
+        # styleSheet Start #
         self.lineEdit.setStyleSheet('border: 0.5px solid rgb(66, 133, 91)')
         self.textEdit.setStyleSheet('border: 0.5px solid rgb(66, 133, 91)')
+        # styleSheet End #
 
         self.bCtrl = False # Ctrl이 활성화 되어 있는가 (기본 False)
-        self.deg = QPointF() # Dreg out
-        self.zoom = QPointF() # Dreg in
+
+        self.cursor = self.textEdit.textCursor() 
 
         ### B ###
         self.lineEdit.returnPressed.connect(self.lineEdit_Enter)
         self.textEdit.textChanged.connect(self.textEdit_Change)
 
     ### C ###
+
+    # [Ctrl]+[Mouse wheel up/down], [Ctrl]+[s, o] Start #
     def keyPressEvent(self, e):
         self.bCtrl = True
         self.update()
@@ -80,10 +81,12 @@ class Window(QMainWindow, ui_file):
             self.savefile()
         elif e.key() == Qt.Key_O:
             self.openfile()
+
     def keyReleaseEvent(self, e):
         if e.key() == Qt.Key_Control:
             self.bCtrl = False
         self.update()
+
     def wheelEvent(self, e):
         global n
 
@@ -92,13 +95,12 @@ class Window(QMainWindow, ui_file):
                 self.textEdit.zoomIn(2)
                 n += 10
                 self.statusBar().showMessage('{0}%'.format(n), 400)
-                print('up')
             elif e.angleDelta().y() < 0 and n > 70:
-                print('down')
                 self.textEdit.zoomIn(-2)
                 n -= 10
                 self.statusBar().showMessage('{0}%'.format(n), 400)
         self.update()
+    # [Ctrl]+[Mouse wheel up/down], [Ctrl]+[s, o] End #
 
 
     def lineEdit_Enter(self):
@@ -135,10 +137,11 @@ class Window(QMainWindow, ui_file):
             self.lineEdit.clear()
         elif self.lineEdit.text()[:4] == 'find':
             find_value = self.lineEdit.text()[5:]
-            self.sound_sucess.start()
-            self.lineEdit.clear()
-            find_list = self.find(find_value)
-            self.find_textEdit_change(find_list)
+            if find_value != '' and len(find_value) != 1:
+                find_list = self.find(find_value)
+                if find_list != []:
+                    self.sound_sucess.start()
+                    self.find_textEdit_change(find_list)
         else:
             self.sound_error.start()
             self.lineEdit.clear()
@@ -225,26 +228,46 @@ class Window(QMainWindow, ui_file):
             self.auto_save_signal.resume()
             self.statusbar.showMessage('Auto save = True', 1000)
 
-    def find(self, v):
-        t = self.textEdit.toPlainText()
+
+### Find Start ###
+    def find(self, find_value):
+        find_target = self.textEdit.toPlainText()
         find_end = 0
         find_count = 0
         find_return = []
 
-        if v != '':
-            while True:
-                try:
-                    find_st = t.index(v, find_end)
-                    find_end = find_st+(len(v)-1)
-                    find_count += 1
-                    find_return.append([find_count, find_st, find_end])
-                except:
-                    break
+        while True:
+            try:
+                find_st = find_target.index(find_value, find_end)
+                find_end = find_st+(len(find_value)-1)
+                find_count += 1
+                find_return.append([find_count, find_st, find_end])
+            except:
+                break
+
         return find_return
 
     def find_textEdit_change(self, find_list):
+        global find_count
+
         if find_list != []:
-            print(find_list)
+            if find_count < len(find_list):
+                self.setCursor(find_list[find_count][1], find_list[find_count][2]+1)
+                find_count += 1
+            elif find_count == len(find_list):
+                find_count = 0
+                self.setCursor(find_list[find_count][1], find_list[find_count][2]+1)
+                find_count = 1
+            elif find_count > len(find_list):
+                find_count = 0
+                self.setCursor(find_list[find_count][1], find_list[find_count][2]+1)
+                find_count = 1 
+    
+    def setCursor(self, start, end):
+        self.cursor.setPosition(start)
+        self.cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, end-start)
+        self.textEdit.setTextCursor(self.cursor)
+### Find End ###
 
 
 
