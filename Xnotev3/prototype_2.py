@@ -7,7 +7,7 @@ from PyQt5.QtGui import QIcon, QTextCursor
 import winsound
 
 ### 기본지정 변수들 ###
-ui_file = uic.loadUiType("ui/20220812_01.ui")[0]
+ui_file = uic.loadUiType("ui/20220909_01.ui")[0]
 file_run = False
 file_run_path = ''
 auto_line = 1 # 1 == auto line True / -1 == auto line False
@@ -59,7 +59,9 @@ class Window(QMainWindow, ui_file):
 
         # styleSheet Start #
         self.lineEdit.setStyleSheet('border: 0.5px solid rgb(66, 133, 91)')
-        self.textEdit.setStyleSheet('border: 0.5px solid rgb(66, 133, 91)')
+        self.textEdit.setStyleSheet('border: 0.5px solid rgb(66, 133, 91);'
+                                    'selection-background-color: rgb(0, 0, 0);'
+                                    'selection-color: rgb(14, 171, 0);')
         # styleSheet End #
 
         self.bCtrl = False # Ctrl이 활성화 되어 있는가 (기본 False)
@@ -81,6 +83,8 @@ class Window(QMainWindow, ui_file):
             self.savefile()
         elif e.key() == Qt.Key_O:
             self.openfile()
+        elif e.key() == Qt.Key_Tab:
+            self.lineEdit.setFocus()
 
     def keyReleaseEvent(self, e):
         if e.key() == Qt.Key_Control:
